@@ -49,7 +49,6 @@ public class ToDoTest {
   // test if assigning id is working
   @Test
   public void getId_tasksInstantiateWithAnID_1() {
-    ToDo.clearList();  // Remember, the test will fail without this line! We need to empty leftover Tasks from previous tests!
     ToDo myTask = new ToDo("Mow the lawn");
     assertEquals(1, myTask.getId());
   }

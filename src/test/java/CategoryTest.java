@@ -2,6 +2,10 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 public class CategoryTest {
+  @After
+  public void clearEverything(){
+    Category.clearList();
+  }
 
   @Test
   public void category_instantiatesCorrectly_true() {
@@ -38,7 +42,6 @@ public class CategoryTest {
 
   @Test
   public void find_returnsCategoryWithSameId_secondCategory() {
-    Category.clearList();
     Category firstCategory = new Category("Home");
     Category secondCategory = new Category("Work");
     assertEquals(Category.find(secondCategory.getId()), secondCategory);
@@ -46,7 +49,6 @@ public class CategoryTest {
 
   @Test
   public void getTasks_initiallyReturnsEmptyList_ArrayList() {
-    Category.clearList();
     Category testCategory = new Category("Home");
     assertEquals(0, testCategory.getTasks().size());
   }
@@ -57,5 +59,10 @@ public class CategoryTest {
     ToDo testTask = new ToDo("Mow the lawn");
     testCategory.addTask(testTask);
     assertTrue(testCategory.getTasks().contains(testTask));
+  }
+
+  @Test
+  public void find_returnsNullWhenNoTaskFound_null() {
+    assertTrue(Category.find(999) == null);
   }
 }
