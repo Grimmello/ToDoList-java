@@ -2,7 +2,7 @@
 
 #### _todo-list, 03-21-2017_
 
-#### By _**Clifford Grimmell and chance magno**_
+#### By _**Clifford Grimmell and Chance Magno and Ryan Jones**_
 
 ## Description
 _Example text for the description of the project_
