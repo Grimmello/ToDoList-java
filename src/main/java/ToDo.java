@@ -1,45 +1,74 @@
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
+import org.sql2o.*;
 
 public class ToDo {
-  private String mDescription;
-  private boolean mCompleted;
-  private LocalDateTime mCreatedAt;
-  private static List<ToDo> instances = new ArrayList<ToDo>();
-  private int mId;
+  private String description;
+  private boolean completed;
+  private LocalDateTime createdAt;
+  private int id;
 
   public ToDo(String description) {
-    mDescription = description;
-    mCompleted = false;
-    mCreatedAt = LocalDateTime.now();
-    instances.add(this);
-    mId = instances.size();
+    this.description = description;
+    completed = false;
+    createdAt = LocalDateTime.now();
   }
 
   public String getDescription() {
-    return mDescription;
+    return description;
   }
 
   public boolean isCompleted() {
-    return mCompleted;
+    return completed;
   }
   public LocalDateTime getCreatedAt() {
-    return mCreatedAt;
-  }
-
-  public static List<ToDo> all() {
-    return instances;
-  }
-
-  public static void clearList() {
-    instances.clear();
+    return createdAt;
   }
 
   public int getId() {
-    return mId;
+    return id;
+  }
+
+  // public static ToDo find(int id) {
+  //
+  // }
+
+  public static List<ToDo> all() {
+    String sql = "SELECT id, description FROM tasks";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(ToDo.class);
+    }
+  }
+
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO tasks(description) VALUES (:description)";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("description", this.description)
+        .executeUpdate()
+        .getKey();
+      }
+    }
+
+  @Override
+  public boolean equals(Object otherToDo){
+    if (!(otherToDo instanceof ToDo)) {
+      return false;
+    } else {
+      ToDo newToDo = (ToDo) otherToDo;
+      return this.getDescription().equals(newToDo.getDescription()) && this.getId() == newToDo.getId();
+    }
   }
 
   public static ToDo find(int id) {
-    return instances.get(id - 1);
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM tasks where id=:id";
+      ToDo todo = con.createQuery(sql)
+      .addParameter("id", id)
+      .executeAndFetchFirst(ToDo.class);
+      return todo;
+    }
   }
+
 }
